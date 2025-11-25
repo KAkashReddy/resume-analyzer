@@ -50,8 +50,8 @@ function App() {
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-600">
-            © 2025 ResumeMatch AI. Built with React, TypeScript, and Tailwind CSS.
+          <p className="text-center text-xs text-gray-400">
+            © 2025 Created & Designed by <span className="font-medium">AKASH REDDY</span>
           </p>
         </div>
       </footer>

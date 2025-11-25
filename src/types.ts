@@ -8,6 +8,8 @@ export interface AnalysisResult {
     jd_skill_count: number;
     resume_skill_count: number;
     overlap_count: number;
+    missing_skills: string[];
+    suggestions: string[];
 }
 
 export interface AnalysisFormData {

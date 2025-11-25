@@ -1,10 +1,43 @@
 import React, { useState } from 'react';
 import { analyzeResume } from '../services/api';
 import type { AnalysisResult } from '../types';
+import { Loader2, AlertCircle, FileText, Briefcase } from 'lucide-react';
 
 interface AnalysisFormProps {
     onAnalysisComplete: (result: AnalysisResult) => void;
 }
+
+const SAMPLE_JD = `We are looking for a Senior React Developer to join our team.
+Responsibilities:
+- Build efficient, reusable front-end abstractions and systems.
+- Identify and address performance bottlenecks.
+- Participate in design and code reviews.
+- Collaborate with other team members and stakeholders.
+
+Requirements:
+- 5+ years of experience with JavaScript, TypeScript, and React.
+- Deep understanding of web technologies (HTML, CSS, DOM).
+- Experience with state management (Redux, Context API).
+- Familiarity with modern build tools (Webpack, Vite).
+- Knowledge of testing frameworks (Jest, React Testing Library).
+- Experience with AWS and CI/CD pipelines is a plus.`;
+
+const SAMPLE_RESUME = `Senior Frontend Engineer with 6 years of experience building scalable web applications.
+Skills:
+- Languages: JavaScript (ES6+), TypeScript, HTML5, CSS3
+- Frameworks: React, Next.js, Redux, Tailwind CSS
+- Tools: Git, Webpack, Vite, Docker, AWS
+- Testing: Jest, Cypress
+
+Experience:
+Senior Frontend Developer | Tech Corp | 2020 - Present
+- Led the migration of a legacy monolith to a micro-frontend architecture using React and TypeScript.
+- Improved application performance by 40% through code splitting and lazy loading.
+- Mentored junior developers and established best practices for code quality.
+
+Frontend Developer | Startup Inc | 2017 - 2020
+- Developed and maintained multiple client-facing applications using React.
+- Collaborated with UX designers to implement responsive and accessible interfaces.`;
 
 const AnalysisForm: React.FC<AnalysisFormProps> = ({ onAnalysisComplete }) => {
     const [jdText, setJdText] = useState('');
@@ -13,10 +46,8 @@ const AnalysisForm: React.FC<AnalysisFormProps> = ({ onAnalysisComplete }) => {
     const [errors, setErrors] = useState({ jd: '', resume: '' });
 
     const handleAnalyze = async () => {
-        // Reset errors
         setErrors({ jd: '', resume: '' });
 
-        // Validate inputs
         let hasError = false;
         const newErrors = { jd: '', resume: '' };
 
@@ -35,7 +66,6 @@ const AnalysisForm: React.FC<AnalysisFormProps> = ({ onAnalysisComplete }) => {
             return;
         }
 
-        // Call API
         setLoading(true);
         try {
             const result = await analyzeResume(jdText, resumeText);
@@ -51,102 +81,98 @@ const AnalysisForm: React.FC<AnalysisFormProps> = ({ onAnalysisComplete }) => {
     return (
         <section className="py-12 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Two Column Layout */}
                 <div className="grid md:grid-cols-2 gap-8">
                     {/* Job Description Input */}
                     <div className="space-y-3">
-                        <div>
-                            <h3 className="text-xl font-semibold text-gray-900">
+                        <div className="flex justify-between items-center">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2">
+                                <Briefcase className="w-4 h-4" />
                                 Job Description
-                            </h3>
-                            <p className="text-sm text-gray-600 mt-1">
-                                Paste the full job description here. Include responsibilities and required skills.
-                            </p>
+                            </label>
                         </div>
-                        <div>
+                        <div className="relative group">
                             <textarea
                                 value={jdText}
                                 onChange={(e) => setJdText(e.target.value)}
-                                placeholder="Paste the JD here…"
-                                rows={16}
-                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none transition-shadow ${errors.jd ? 'border-red-500' : 'border-gray-300'
+                                placeholder="Paste the full job description here…"
+                                className={`w-full h-72 px-5 py-4 bg-white border rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 resize-none transition-all text-sm leading-relaxed shadow-sm ${errors.jd ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'
                                     }`}
                             />
-                            {errors.jd && (
-                                <p className="text-sm text-red-600 mt-1">{errors.jd}</p>
-                            )}
-                            <p className="text-xs text-gray-500 mt-1">
+                            <div className="absolute bottom-4 right-4 text-[10px] font-medium text-gray-400 pointer-events-none bg-gray-50/80 px-2 py-1 rounded border border-gray-100">
                                 {jdText.length} / 5000 characters
-                            </p>
+                            </div>
+                        </div>
+                        <div className="flex justify-between items-start">
+                            {errors.jd ? (
+                                <div className="flex items-center gap-2 text-sm text-red-600 animate-fadeIn">
+                                    <AlertCircle className="w-4 h-4" />
+                                    {errors.jd}
+                                </div>
+                            ) : <div></div>}
+                            <button
+                                onClick={() => setJdText(SAMPLE_JD)}
+                                className="text-xs font-medium text-primary-600 hover:text-primary-700 hover:underline flex items-center gap-1"
+                            >
+                                Use Sample JD
+                            </button>
                         </div>
                     </div>
 
                     {/* Candidate Résumé Input */}
                     <div className="space-y-3">
-                        <div>
-                            <h3 className="text-xl font-semibold text-gray-900">
-                                Candidate Résumé
-                            </h3>
-                            <p className="text-sm text-gray-600 mt-1">
-                                Paste the candidate résumé here. Include summary, experience, and skills.
-                            </p>
+                        <div className="flex justify-between items-center">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2">
+                                <FileText className="w-4 h-4" />
+                                Résumé
+                            </label>
                         </div>
-                        <div>
+                        <div className="relative group">
                             <textarea
                                 value={resumeText}
                                 onChange={(e) => setResumeText(e.target.value)}
-                                placeholder="Paste the résumé here…"
-                                rows={16}
-                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none transition-shadow ${errors.resume ? 'border-red-500' : 'border-gray-300'
+                                placeholder="Paste the full résumé here…"
+                                className={`w-full h-72 px-5 py-4 bg-white border rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 resize-none transition-all text-sm leading-relaxed shadow-sm ${errors.resume ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'
                                     }`}
                             />
-                            {errors.resume && (
-                                <p className="text-sm text-red-600 mt-1">{errors.resume}</p>
-                            )}
-                            <p className="text-xs text-gray-500 mt-1">
+                            <div className="absolute bottom-4 right-4 text-[10px] font-medium text-gray-400 pointer-events-none bg-gray-50/80 px-2 py-1 rounded border border-gray-100">
                                 {resumeText.length} / 5000 characters
-                            </p>
+                            </div>
+                        </div>
+                        <div className="flex justify-between items-start">
+                            {errors.resume ? (
+                                <div className="flex items-center gap-2 text-sm text-red-600 animate-fadeIn">
+                                    <AlertCircle className="w-4 h-4" />
+                                    {errors.resume}
+                                </div>
+                            ) : <div></div>}
+                            <button
+                                onClick={() => setResumeText(SAMPLE_RESUME)}
+                                className="text-xs font-medium text-primary-600 hover:text-primary-700 hover:underline flex items-center gap-1"
+                            >
+                                Use Sample Résumé
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 {/* Analyze Button */}
-                <div className="mt-8 text-center space-y-3">
+                <div className="mt-10 text-center space-y-4">
                     <button
                         onClick={handleAnalyze}
                         disabled={loading}
-                        className="px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+                        className="px-10 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg hover:shadow-xl hover:shadow-primary-600/20"
                     >
                         {loading ? (
                             <span className="flex items-center gap-2">
-                                <svg
-                                    className="animate-spin h-5 w-5"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <circle
-                                        className="opacity-25"
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                    ></circle>
-                                    <path
-                                        className="opacity-75"
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                </svg>
-                                Analyzing…
+                                <Loader2 className="animate-spin h-5 w-5" />
+                                Analyzing Match...
                             </span>
                         ) : (
                             'Analyze Match'
                         )}
                     </button>
-                    <p className="text-sm text-gray-500">
-                        Your data is processed securely. No files are stored.
+                    <p className="text-xs text-gray-400">
+                        Your data is processed locally and securely.
                     </p>
                 </div>
             </div>

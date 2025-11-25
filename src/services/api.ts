@@ -60,5 +60,12 @@ export async function analyzeResume(
         jd_skill_count: jdSkills.length,
         resume_skill_count: resumeSkills.length,
         overlap_count: overlapSkills.length,
+        missing_skills: jdSkills.filter(skill => !overlapSkills.includes(skill)),
+        suggestions: [
+            "Add more quantifiable metrics to your experience section.",
+            "Tailor your summary to highlight the key skills mentioned in the JD.",
+            "Ensure your formatting is consistent and ATS-friendly.",
+            ...jdSkills.filter(skill => !overlapSkills.includes(skill)).map(skill => `Consider adding a project or experience demonstrating ${skill}.`).slice(0, 2)
+        ]
     };
 }
