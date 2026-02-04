@@ -1,5 +1,6 @@
 import React from 'react';
 import { FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
     return (
@@ -21,24 +22,24 @@ const Header: React.FC = () => {
 
                     {/* Navigation Links */}
                     <nav className="hidden md:flex items-center gap-8">
-                        <a
-                            href="#"
+                        <Link
+                            to="/"
                             className="text-sm font-bold text-gray-900 hover:text-primary-600 transition-colors relative after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-full after:h-0.5 after:bg-primary-600 after:scale-x-100 after:transition-transform"
                         >
                             Product
-                        </a>
-                        <a
-                            href="#how-it-works"
+                        </Link>
+                        <Link
+                            to="/how-it-works"
                             className="text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors hover:font-semibold"
                         >
                             How it works
-                        </a>
-                        <a
-                            href="#contact"
+                        </Link>
+                        <Link
+                            to="/contact"
                             className="text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors hover:font-semibold"
                         >
                             Contact
-                        </a>
+                        </Link>
                     </nav>
                 </div>
             </div>
